@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # Servidor web: Nginx + PHP
+  web:
+    image: nginx:alpine
+    container_name: zenzotec-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - zenzotec-network
+
+  # Procesador PHP
+  php:
+    image: php:8.2-fpm-alpine
+    container_name: zenzotec-php
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+    environment:
+      - PDO_MYSQL=1
+    command: |
+      sh -c "
+        docker-php-ext-install pdo pdo_mysql > /dev/null && \
+        php-fpm
+      "
+    networks:
+      - zenzotec-network
+  # Base de datos: MariaDB
+  db:
+    image: mariadb:10.11
+    container_name: zenzotec-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass123
+      MYSQL_DATABASE: zenzotec_db
+      MYSQL_USER: zenzotec_user
+      MYSQL_PASSWORD: userpass123
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - zenzotec-network
+
+  # phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: zenzotec-phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: zenzotec_user
+      PMA_PASSWORD: userpass123
+    depends_on:
+      - db
+    networks:
+      - zenzotec-network
+
+# Volúmenes persistentes
+volumes:
+  db_data:
+
+# Red interna
+networks:
+  zenzotec-network:
+    driver: bridge

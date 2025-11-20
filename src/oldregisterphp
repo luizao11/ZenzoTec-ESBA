@@ -1,0 +1,58 @@
+<?php
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['error' => 'Método no permitido']);
+    exit;
+}
+
+header('Content-Type: application/json; charset=utf-8');
+
+$nombre = trim($_POST['nombre'] ?? '');
+$apellido = trim($_POST['apellido'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$password = $_POST['password'] ?? '';
+$direccion = trim($_POST['direccion'] ?? '');
+
+if (empty($nombre) || empty($apellido) || empty($email) || empty($password) || empty($direccion)) {
+    echo json_encode(['error' => 'Todos los campos son obligatorios']);
+    exit;
+}
+
+if (strlen($password) < 6) {
+    echo json_encode(['error' => 'La contraseña debe tener al menos 6 caracteres']);
+    exit;
+}
+
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo json_encode(['error' => 'Correo electrónico inválido']);
+    exit;
+}
+
+try {
+    $pdo = new PDO(
+        "mysql:host=db;dbname=zenzotec_db;charset=utf8mb4",
+        "zenzotec_user",
+        "userpass123",
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+    );
+
+    // Verificar email duplicado
+    $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
+    $stmt->execute([$email]);
+    if ($stmt->fetch()) {
+        echo json_encode(['error' => 'Este correo ya está registrado']);
+        exit;
+    }
+
+    // Registrar
+    $hashed = password_hash($password, PASSWORD_DEFAULT);
+    $stmt = $pdo->prepare("INSERT INTO usuarios (nombre, apellido, email, password, direccion) VALUES (?, ?, ?, ?, ?)");
+    $stmt->execute([$nombre, $apellido, $email, $hashed, $direccion]);
+
+    echo json_encode(['success' => true, 'message' => 'Registro exitoso. Ahora puedes iniciar sesión.']);
+
+} catch (PDOException $e) {
+    error_log($e->getMessage());
+    echo json_encode(['error' => 'Error al registrar el usuario']);
+}
+?>
