@@ -1,189 +1,335 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resumen de Compra - ZenzoTec</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .checkout-container {
-            padding: 60px 0;
-            background-color: #F8FAFC;
-        }
-        .checkout-box {
-            background: white;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            padding: 30px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .checkout-box h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: var(--dark);
-        }
-        .checkout-items {
-            margin-bottom: 25px;
-        }
-        .checkout-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .checkout-total {
-            display: flex;
-            justify-content: space-between;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin: 20px 0;
-            padding-top: 15px;
-            border-top: 2px solid #eee;
-        }
-        .checkout-actions {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .btn-secondary {
-            background: #F1F5F9;
-            color: var(--dark);
-            border: none;
-            padding: 12px 24px;
-            border-radius: 30px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .btn-secondary:hover {
-            background: #E2E8F0;
-            transform: translateY(-2px);
-        }
-        .empty-checkout {
-            text-align: center;
-            color: var(--gray);
-            font-style: italic;
-            padding: 30px 0;
-        }
-    </style>
-</head>
-<body>
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="logo">
-                <h1><i class="fas fa-microchip"></i> ZenzoTec</h1>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="index.html#inicio">Inicio</a></li>
-                    <li><a href="index.html#productos">Productos</a></li>
-                    <li><a href="index.html#ofertas">Ofertas</a></li>
-                    <li><a href="index.html#novedades">Novedades</a></li>
-                    <li><a href="index.html#contacto">Contacto</a></li>
-                </ul>
-            </nav>
-            <div class="cart-icon" onclick="window.location.href='index.html'">
-                <i class="fas fa-shopping-cart"></i>
-                <span id="cart-count">0</span>
-            </div>
-        </div>
-    </header>
-
-    <main class="checkout-container">
-        <div class="checkout-box">
-            <h2><i class="fas fa-receipt"></i> Resumen de tu Compra</h2>
-            <div class="checkout-items" id="checkout-items">
-                <!-- Los productos se cargarán aquí -->
-            </div>
-            <div class="checkout-total">
-                <span>Total:</span>
-                <span id="checkout-total">$0.00</span>
-            </div>
-            <div class="checkout-actions">
-                <button class="btn-secondary" onclick="window.history.back()">
-                    <i class="fas fa-arrow-left"></i> Seguir Comprando
-                </button>
-                <button class="btn-primary" id="confirm-purchase">
-                    <i class="fas fa-check-circle"></i> Confirmar Compra
-                </button>
-            </div>
-        </div>
-    </main>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>ZenzoTec</h4>
-                    <p>Tu tienda de confianza para productos de tecnología de última generación.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Contacto</h4>
-                    <p><i class="fas fa-map-marker-alt"></i> Av. Tecnología 123, Ciudad Digital</p>
-                    <p><i class="fas fa-phone"></i> (555) 123-4567</p>
-                    <p><i class="fas fa-envelope"></i> info@zenzotec.com</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Horario</h4>
-                    <p>Lunes a Viernes: 9:00 - 20:00</p>
-                    <p>Sábados: 10:00 - 18:00</p>
-                    <p>Domingos: Cerrado</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 ZenzoTec. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const user = localStorage.getItem('user');
-            if (!user) {
-                alert('Debes iniciar sesión para ver tu compra.');
-                window.location.href = 'login.html';
-                return;
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Confirmar Compra - ZenzoTec</title>
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+            .checkout-container {
+                padding: 60px 0;
+                background-color: #F8FAFC;
             }
-
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const checkoutItems = document.getElementById('checkout-items');
-            const checkoutTotal = document.getElementById('checkout-total');
-
-            if (cart.length === 0) {
-                checkoutItems.innerHTML = '<p class="empty-checkout">No hay productos en tu compra.</p>';
-                checkoutTotal.textContent = '$0.00';
-                return;
+            .checkout-box {
+                background: white;
+                border-radius: 12px;
+                box-shadow: var(--shadow);
+                padding: 30px;
+                max-width: 800px;
+                margin: 0 auto;
             }
+            .checkout-box h2 {
+                text-align: center;
+                margin-bottom: 25px;
+                color: var(--dark);
+            }
+            .checkout-section {
+                margin-bottom: 25px;
+            }
+            .section-title {
+                font-size: 1.2rem;
+                margin-bottom: 15px;
+                color: var(--primary);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .checkout-items,
+            .shipping-address {
+                padding: 15px 0;
+            }
+            .checkout-item {
+                display: flex;
+                justify-content: space-between;
+                padding: 10px 0;
+                border-bottom: 1px solid #eee;
+            }
+            .checkout-total {
+                display: flex;
+                justify-content: space-between;
+                font-size: 1.4rem;
+                font-weight: 700;
+                color: var(--primary);
+                margin: 20px 0;
+                padding-top: 15px;
+                border-top: 2px solid #eee;
+            }
+            .form-group {
+                margin-bottom: 15px;
+            }
+            .form-group label {
+                display: block;
+                margin-bottom: 6px;
+                font-weight: 600;
+                color: var(--dark);
+            }
+            .form-group input {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                font-family: inherit;
+            }
+            .checkout-actions {
+                display: flex;
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+            .btn-secondary {
+                background: #F1F5F9;
+                color: var(--dark);
+                border: none;
+                padding: 12px 24px;
+                border-radius: 30px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: var(--transition);
+            }
+            .btn-secondary:hover {
+                background: #E2E8F0;
+                transform: translateY(-2px);
+            }
+            .empty-checkout {
+                text-align: center;
+                color: var(--gray);
+                font-style: italic;
+                padding: 30px 0;
+            }
+            .loading {
+                text-align: center;
+                padding: 10px;
+                color: var(--primary);
+            }
+            .error {
+                color: var(--danger);
+                background: #fee;
+                padding: 10px;
+                border-radius: 8px;
+                margin-bottom: 15px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <div class="logo">
+                    <h1><i class="fas fa-microchip"></i> ZenzoTec</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="index.html#inicio">Inicio</a></li>
+                        <li><a href="index.html#productos">Productos</a></li>
+                        <li><a href="index.html#ofertas">Ofertas</a></li>
+                        <li><a href="index.html#novedades">Novedades</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
 
-            let html = '';
-            let total = 0;
-            cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
-                html += `
-                    <div class="checkout-item">
-                        <div>
-                            <strong>${item.name}</strong><br>
-                            <small>${item.quantity} x $${item.price.toFixed(2)}</small>
-                        </div>
-                        <div>$${itemTotal.toFixed(2)}</div>
+        <main class="checkout-container">
+            <div class="checkout-box">
+                <h2><i class="fas fa-receipt"></i> Confirmar Pedido</h2>
+                
+                <div id="error-message" class="error" style="display:none;"></div>
+
+                <!-- Dirección de envío -->
+                <div class="checkout-section">
+                    <div class="section-title">
+                        <i class="fas fa-map-marker-alt"></i> Dirección de Envío
                     </div>
-                `;
-            });
-            checkoutItems.innerHTML = html;
-            checkoutTotal.textContent = `$${total.toFixed(2)}`;
+                    <div class="shipping-address">
+                        <div class="form-group">
+                            <label for="direccion_envio">Dirección completa</label>
+                            <input type="text" id="direccion_envio" placeholder="Cargando..." disabled>
+                        </div>
+                    </div>
+                </div>
 
-            // Confirmar compra
-            document.getElementById('confirm-purchase').addEventListener('click', function() {
-                alert(`¡Compra confirmada, ${user}! Gracias por confiar en ZenzoTec.`);
+                <!-- Productos -->
+                <div class="checkout-section">
+                    <div class="section-title">
+                        <i class="fas fa-box"></i> Productos
+                    </div>
+                    <div class="checkout-items" id="checkout-items">
+                        <p class="loading">Cargando carrito...</p>
+                    </div>
+                </div>
+
+                <!-- Total -->
+                <div class="checkout-total">
+                    <span>Total:</span>
+                    <span id="checkout-total">$0.00</span>
+                </div>
+
+                <!-- Acciones -->
+                <div class="checkout-actions">
+                    <button class="btn-secondary" onclick="window.location.href='index.html'">
+                        <i class="fas fa-arrow-left"></i> Seguir Comprando
+                    </button>
+                    <button class="btn-primary" id="confirm-purchase">
+                        <i class="fas fa-check-circle"></i> Confirmar Compra
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>ZenzoTec</h4>
+                        <p>Tu tienda de confianza para productos de tecnología de última generación.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Contacto</h4>
+                        <p><i class="fas fa-map-marker-alt"></i> Av. Tecnología 123, Ciudad Digital</p>
+                        <p><i class="fas fa-phone"></i> (555) 123-4567</p>
+                        <p><i class="fas fa-envelope"></i> info@zenzotec.com</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Horario</h4>
+                        <p>Lunes a Viernes: 9:00 - 20:00</p>
+                        <p>Sábados: 10:00 - 18:00</p>
+                        <p>Domingos: Cerrado</p>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 ZenzoTec. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </footer>
+    <script>
+document.addEventListener('DOMContentLoaded', async function() {
+    // === 1. Actualizar menú de navegación ===
+    const nav = document.getElementById('main-nav');
+    if (nav) {
+        // Verificar sesión para el menú
+        try {
+            const authRes = await fetch('obtener_perfil.php', { method: 'HEAD' });
+            if (authRes.ok) {
+                nav.insertAdjacentHTML('beforeend', `
+                    <li><a href="checkout.html">Mi Cuenta</a></li>
+                    <li><a href="logout.php">Cerrar Sesión</a></li>
+                `);
+            } else {
+                nav.insertAdjacentHTML('beforeend', `
+                    <li><a href="login.php">Iniciar Sesión</a></li>
+                    <li><a href="register.html">Registrarse</a></li>
+                `);
+            }
+        } catch {
+            nav.insertAdjacentHTML('beforeend', `
+                <li><a href="login.php">Iniciar Sesión</a></li>
+                <li><a href="register.html">Registrarse</a></li>
+            `);
+        }
+    }
+
+    // === 2. Cargar carrito y dirección ===
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const checkoutItems = document.getElementById('checkout-items');
+    const checkoutTotal = document.getElementById('checkout-total');
+    const direccionInput = document.getElementById('direccion_envio');
+
+    // Validar carrito
+    if (cart.length === 0) {
+        checkoutItems.innerHTML = '<p class="empty-checkout">No hay productos en tu carrito.</p>';
+        checkoutTotal.textContent = '$0.00';
+        return;
+    }
+
+    // Mostrar productos
+    let html = '';
+    let total = 0;
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        html += `
+            <div class="checkout-item">
+                <div>
+                    <strong>${item.name}</strong><br>
+                    <small>${item.quantity} x $${item.price.toFixed(2)}</small>
+                </div>
+                <div>$${itemTotal.toFixed(2)}</div>
+            </div>
+        `;
+    });
+    checkoutItems.innerHTML = html;
+    checkoutTotal.textContent = `$${total.toFixed(2)}`;
+
+    // === 3. Verificar sesión y cargar dirección ===
+    try {
+        const profileRes = await fetch('obtener_perfil.php');
+        
+        // Verificar que la respuesta sea JSON
+        const contentType = profileRes.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            throw new Error('Sesión no válida');
+        }
+
+        const profileData = await profileRes.json();
+        
+        if (profileData.success) {
+            direccionInput.value = profileData.direccion;
+            direccionInput.disabled = false;
+        } else {
+            throw new Error('Sesión expirada');
+        }
+    } catch (error) {
+        alert('Debes iniciar sesión para continuar con la compra.');
+        window.location.href = 'login.php';
+        return;
+    }
+
+    // === 4. Confirmar compra ===
+    document.getElementById('confirm-purchase').addEventListener('click', async function() {
+        const direccion = document.getElementById('direccion_envio').value.trim();
+        if (!direccion) {
+            alert('Por favor, verifica tu dirección de envío.');
+            return;
+        }
+
+        const btn = this;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+        btn.disabled = true;
+
+        try {
+            const response = await fetch('procesar_pedido.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    productos: cart, 
+                    total: total,
+                    direccion_envio: direccion
+                })
+            });
+
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Error en el servidor');
+            }
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert(`✅ ¡Compra realizada con éxito!\nNúmero de pedido: ${result.numero_pedido}`);
                 localStorage.removeItem('cart');
                 window.location.href = 'index.html';
-            });
-        });
-    </script>
-</body>
-</html>
+            } else {
+                alert('❌ Error: ' + (result.error || 'No se pudo procesar la compra.'));
+            }
+        } catch (error) {
+            alert('❌ Error de conexión. Inténtalo más tarde.');
+            console.error('Error:', error);
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    });
+});
+</script>
+    </body>
+    </html>

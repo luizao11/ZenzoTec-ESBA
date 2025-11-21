@@ -13,10 +13,18 @@ header('Content-Type: application/json; charset=utf-8');
 $input = json_decode(file_get_contents('php://input'), true);
 $productos = $input['productos'] ?? [];
 $total = floatval($input['total'] ?? 0);
+$direccion_envio = trim($input['direccion_envio'] ?? '');
 
+// Validaciones
 if (empty($productos) || $total <= 0) {
     http_response_code(400);
     echo json_encode(['error' => 'Carrito vacío o total inválido']);
+    exit;
+}
+
+if (empty($direccion_envio)) {
+    http_response_code(400);
+    echo json_encode(['error' => 'La dirección de envío es obligatoria']);
     exit;
 }
 
@@ -33,18 +41,18 @@ try {
 
     $pdo->beginTransaction();
 
-    // 1. Generar número de pedido único
+    // Generar número de pedido único
     $numero_pedido = 'PED-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
 
-    // 2. Crear pedido
+    // Crear pedido (¡incluye direccion_envio!)
     $stmt = $pdo->prepare("
-        INSERT INTO pedidos (usuario_id, numero_pedido, total) 
-        VALUES (?, ?, ?)
+        INSERT INTO pedidos (usuario_id, numero_pedido, total, direccion_envio) 
+        VALUES (?, ?, ?, ?)
     ");
-    $stmt->execute([$_SESSION['usuario_id'], $numero_pedido, $total]);
+    $stmt->execute([$_SESSION['usuario_id'], $numero_pedido, $total, $direccion_envio]);
     $pedido_id = $pdo->lastInsertId();
 
-    // 3. Insertar productos y verificar stock
+    // Procesar productos
     foreach ($productos as $item) {
         $producto_id = intval($item['id']);
         $cantidad = intval($item['quantity']);
@@ -52,7 +60,7 @@ try {
 
         if ($cantidad <= 0) continue;
 
-        // Verificar stock disponible
+        // Verificar stock
         $stmt = $pdo->prepare("SELECT stock, nombre FROM productos WHERE id = ?");
         $stmt->execute([$producto_id]);
         $producto = $stmt->fetch();
@@ -79,7 +87,6 @@ try {
 
     $pdo->commit();
 
-    // Limpiar carrito en frontend (no es necesario en backend)
     echo json_encode([
         'success' => true,
         'numero_pedido' => $numero_pedido,

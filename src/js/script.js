@@ -277,3 +277,61 @@ function showNotification(message) {
         }, 300);
     }, 3000);
 }
+// === Cargar productos dinámicamente ===
+function cargarProductos() {
+    const container = document.getElementById('products-container');
+    if (!container) return;
+
+    fetch('productos_api.php')
+        .then(response => response.json())
+        .then(productos => {
+            if (!Array.isArray(productos)) {
+                container.innerHTML = '<p class="loading-products">No se pudieron cargar los productos.</p>';
+                return;
+            }
+
+            if (productos.length === 0) {
+                container.innerHTML = '<p class="loading-products">No hay productos disponibles.</p>';
+                return;
+            }
+
+            let html = '';
+            productos.forEach(producto => {
+                // Si no hay imagen, usa un placeholder
+                const imgSrc = producto.image 
+                    ? `images/${producto.image}` 
+                    : 'https://placehold.co/300x200/4F46E5/FFFFFF?text=Sin+Imagen';
+
+                html += `
+                    <div class="product-card">
+                        <img src="${imgSrc}" 
+                             alt="${producto.name}" 
+                             onerror="this.src='https://placehold.co/300x200/4F46E5/FFFFFF?text=Sin+Imagen'">
+                        <h3>${producto.name}</h3>
+                        <p class="price">$${producto.price.toFixed(2)}</p>
+                        <button class="btn-add-to-cart" 
+                                data-id="${producto.id}" 
+                                data-name="${producto.name}" 
+                                data-price="${producto.price}">
+                            Agregar al Carrito
+                        </button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+
+            // Re-vincular eventos de "Agregar al Carrito"
+            document.querySelectorAll('.btn-add-to-cart').forEach(button => {
+                button.addEventListener('click', addToCart);
+            });
+        })
+        .catch(error => {
+            console.error('Error al cargar productos:', error);
+            container.innerHTML = '<p class="loading-products">Error al cargar los productos.</p>';
+        });
+}
+
+// Ejecutar al cargar la página
+if (document.getElementById('products-container')) {
+    document.addEventListener('DOMContentLoaded', cargarProductos);
+}
