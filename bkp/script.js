@@ -129,29 +129,8 @@ function closeCart() {
     document.getElementById('cart-overlay').classList.remove('active');
 }
 
+
 /*function checkout() {
-    if (cart.length === 0) {
-        showNotification('Tu carrito está vacío');
-        return;
-    }
-
-    // Verificar si el usuario ha iniciado sesión
-    const user = localStorage.getItem('user');
-    if (!user) {
-        // Redirigir al login
-        window.location.href = 'login.html';
-        return;
-    }
-
-    // Simular compra exitosa
-    showNotification(`¡Gracias por tu compra, ${user}!`);
-    cart = [];
-    localStorage.removeItem('cart');
-    updateCartUI();
-    closeCart();
-}*/
-//Funcion Checkout
-function checkout() {
     if (cart.length === 0) {
         showNotification('Tu carrito está vacío');
         return;
@@ -166,6 +145,29 @@ function checkout() {
         // Ir directamente al resumen de compra
         window.location.href = 'checkout.html';
     }
+}*/
+//check out validando con php sin localstorage
+function checkout() {
+    if (cart.length === 0) {
+        showNotification('Tu carrito está vacío');
+        return;
+    }
+
+    // Verificar sesión con PHP (no con localStorage)
+    fetch('obtener_perfil.php', { method: 'HEAD' })
+        .then(response => {
+            if (response.ok) {
+                // Usuario logueado → ir a checkout
+                window.location.href = 'checkout.html';
+            } else {
+                // No logueado → ir a login
+                window.location.href = 'login.php';
+            }
+        })
+        .catch(error => {
+            console.error('Error al verificar sesión:', error);
+            showNotification('Error de conexión. Inténtalo más tarde.');
+        });
 }
 
 
@@ -335,3 +337,127 @@ function cargarProductos() {
 if (document.getElementById('products-container')) {
     document.addEventListener('DOMContentLoaded', cargarProductos);
 }
+
+//estaba en index.html
+// Cargar productos dinámicamente
+function cargarProductos() {
+    const container = document.getElementById('products-container');
+    if (!container) return;
+
+    fetch('productos_api.php')
+        .then(response => response.json())
+        .then(productos => {
+            if (!Array.isArray(productos)) {
+                container.innerHTML = '<p class="loading-products">Error al cargar productos.</p>';
+                return;
+            }
+
+            if (productos.length === 0) {
+                container.innerHTML = '<p class="loading-products">No hay productos disponibles.</p>';
+                return;
+            }
+
+            let html = '';
+            productos.forEach(producto => {
+                const imgSrc = producto.image 
+                    ? `images/${producto.image}` 
+                    : 'https://placehold.co/300x200/4F46E5/FFFFFF?text=Sin+Imagen';
+
+                html += `
+                    <div class="product-card">
+                        <img src="${imgSrc}" 
+                             alt="${producto.name}" 
+                             onerror="this.src='https://placehold.co/300x200/4F46E5/FFFFFF?text=Sin+Imagen'">
+                        <h3>${producto.name}</h3>
+                        <p class="price">$${producto.price.toFixed(2)}</p>
+                        <button class="btn-add-to-cart" 
+                                data-id="${producto.id}" 
+                                data-name="${producto.name}" 
+                                data-price="${producto.price}">
+                            Agregar al Carrito
+                        </button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+
+            // Re-vincular eventos de carrito
+            document.querySelectorAll('.btn-add-to-cart').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const id = button.dataset.id;
+                    const name = button.dataset.name;
+                    const price = parseFloat(button.dataset.price);
+                    
+                    // Agregar al carrito (tu lógica existente)
+                    addToCart({ id, name, price, quantity: 1 });
+                });
+            });
+        })
+        .catch(error => {
+            container.innerHTML = '<p class="loading-products">Error de conexión.</p>';
+        });
+}
+
+// Actualizar menú de autenticación
+function updateAuthMenu() {
+    const navUl = document.querySelector('header nav ul');
+    if (!navUl) return;
+
+    // Eliminar enlaces anteriores
+    document.querySelectorAll('li[data-auth]').forEach(el => el.remove());
+
+    fetch('obtener_perfil.php', { method: 'HEAD' })
+        .then(response => {
+            if (response.ok) {
+                // Usuario logueado
+                navUl.insertAdjacentHTML('beforeend', `
+                    <li data-auth="true"><a href="checkout.html">Mi Cuenta</a></li>
+                    <li data-auth="true"><a href="logout.php">Cerrar Sesión</a></li>
+                `);
+            } else {
+                // Usuario no logueado
+                navUl.insertAdjacentHTML('beforeend', `
+                    <li data-auth="true"><a href="login.php">Iniciar Sesión</a></li>
+                    <li data-auth="true"><a href="registrarse.html">Registrarse</a></li>
+                `);
+            }
+        })
+        .catch(() => {
+            // En caso de error, mostrar login/register
+            navUl.insertAdjacentHTML('beforeend', `
+                <li data-auth="true"><a href="login.php">Iniciar Sesión</a></li>
+                <li data-auth="true"><a href="registrarse.html">Registrarse</a></li>
+            `);
+        });
+}
+
+// Inicializar al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    cargarProductos();
+    updateAuthMenu();
+    
+    // Eventos del carrito (de tu script.js existente)
+    document.querySelector('.cart-icon').addEventListener('click', () => {
+        document.getElementById('cart-overlay').classList.add('active');
+    });
+    
+    document.getElementById('close-cart').addEventListener('click', () => {
+        document.getElementById('cart-overlay').classList.remove('active');
+    });
+    
+    // Evento de checkout
+    document.getElementById('checkout-btn').addEventListener('click', () => {
+        fetch('obtener_perfil.php', { method: 'HEAD' })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = 'checkout.html';
+                } else {
+                    window.location.href = 'login.php';
+                }
+            })
+            .catch(() => {
+                window.location.href = 'login.php';
+            });
+    });
+});
+
