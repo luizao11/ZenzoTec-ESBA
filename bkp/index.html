@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <!-- Header -->
     <header>
@@ -37,8 +38,7 @@
             <button class="btn-primary">Ver Productos</button>
         </div>
     </section>
-
-    <!-- Carrusel de Novedades -->
+  <!-- Carrusel de Novedades -->
     <section id="novedades" class="new-arrivals">
         <div class="container">
             <h2>Novedades</h2>
@@ -53,7 +53,7 @@
                         </div>
                     </div>
                     <div class="carousel-slide">
-                        <img src="https://placehold.co/600x300/06B6D4/FFFFFF?text=Tablet+Pro+12.9%22" alt="Tablet Pro 12.9&quot;">
+                        <img src="https://placehold.co/600x300/06B6D4/FFFFFF?text=Tablet+Pro+12.9\"" alt="Tablet Pro 12.9\"">
                         <div class="carousel-content">
                             <h3>Tablet Pro 12.9"</h3>
                             <p>La potencia de una computadora en una tablet</p>
@@ -69,33 +69,42 @@
                         </div>
                     </div>
                 </div>
-                <button class="carousel-btn prev" id="prevBtn">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="carousel-btn next" id="nextBtn">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+                <button class="carousel-btn prev" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+                <button class="carousel-btn next" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
     </section>
-
+  
     <!-- Productos Destacados -->
-    <section id="productos" class="featured-products">
-        <div class="container">
-            <h2>Productos Destacados</h2>
-            <div class="products-grid" id="products-container">
-                <p class="loading-products">Cargando productos...</p>
-            </div>
+<section id="productos" class="featured-products">
+    <div class="container">
+        <h2>Productos Destacados</h2>
+        <div class="products-grid" id="products-container">
+            <p class="loading-products">Cargando productos...</p>
         </div>
-    </section>
+    </div>
+</section>
 
+<!--<style>
+.loading-products {
+    text-align: center;
+    color: var(--gray);
+    font-style: italic;
+    grid-column: 1 / -1;
+}
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+</style>-->
     <!-- Ofertas con Comentarios -->
     <section id="ofertas" class="deals">
         <div class="container">
             <h2>Ofertas Especiales</h2>
             <div class="deals-container">
                 <div class="deal-product">
-                    <img src="https://placehold.co/400x300/14B8A6/FFFFFF?text=Teclado+Mec%C3%A1nico" alt="Teclado Mecánico">
+                    <img src="https://placehold.co/400x300/14B8A6/FFFFFF?text=Teclado+Mecánico" alt="Teclado Mecánico">
                     <div class="deal-info">
                         <h3>Teclado Mecánico RGB</h3>
                         <p class="original-price">$129.99</p>
@@ -110,9 +119,7 @@
                             </span>
                             <span class="rating-value">4.5</span>
                         </div>
-                        <button class="btn-add-to-cart" data-id="5" data-name="Teclado Mecánico RGB" data-price="89.99">
-                            Agregar al Carrito
-                        </button>
+                        <button class="btn-add-to-cart" data-id="5" data-name="Teclado Mecánico RGB" data-price="89.99">Agregar al Carrito</button>
                     </div>
                 </div>
                 <div class="comments-section">
@@ -150,16 +157,11 @@
                         <div class="rating-input">
                             <label>Calificación:</label>
                             <div class="stars-input">
-                                <input type="radio" id="star5" name="rating" value="5">
-                                <label for="star5"><i class="fas fa-star"></i></label>
-                                <input type="radio" id="star4" name="rating" value="4">
-                                <label for="star4"><i class="fas fa-star"></i></label>
-                                <input type="radio" id="star3" name="rating" value="3">
-                                <label for="star3"><i class="fas fa-star"></i></label>
-                                <input type="radio" id="star2" name="rating" value="2">
-                                <label for="star2"><i class="fas fa-star"></i></label>
-                                <input type="radio" id="star1" name="rating" value="1">
-                                <label for="star1"><i class="fas fa-star"></i></label>
+                                <input type="radio" id="star5" name="rating" value="5"><label for="star5"><i class="fas fa-star"></i></label>
+                                <input type="radio" id="star4" name="rating" value="4"><label for="star4"><i class="fas fa-star"></i></label>
+                                <input type="radio" id="star3" name="rating" value="3"><label for="star3"><i class="fas fa-star"></i></label>
+                                <input type="radio" id="star2" name="rating" value="2"><label for="star2"><i class="fas fa-star"></i></label>
+                                <input type="radio" id="star1" name="rating" value="1"><label for="star1"><i class="fas fa-star"></i></label>
                             </div>
                         </div>
                         <textarea id="comment-text" placeholder="Escribe tu comentario aquí..." required></textarea>
@@ -178,6 +180,7 @@
                 <button id="close-cart"><i class="fas fa-times"></i></button>
             </div>
             <div class="cart-items" id="cart-items">
+                <!-- Los productos se agregarán aquí dinámicamente -->
                 <p class="empty-cart">Tu carrito está vacío</p>
             </div>
             <div class="cart-footer">
@@ -195,14 +198,14 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4>ZenzoTec</h4>
+                    <h4>TechStore</h4>
                     <p>Tu tienda de confianza para productos de tecnología de última generación.</p>
                 </div>
                 <div class="footer-section">
                     <h4>Contacto</h4>
                     <p><i class="fas fa-map-marker-alt"></i> Av. Tecnología 123, Ciudad Digital</p>
                     <p><i class="fas fa-phone"></i> (555) 123-4567</p>
-                    <p><i class="fas fa-envelope"></i> info@zenzotec.com</p>
+                    <p><i class="fas fa-envelope"></i> info@techstore.com</p>
                 </div>
                 <div class="footer-section">
                     <h4>Horario</h4>
@@ -212,7 +215,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 ZenzoTec. Todos los derechos reservados.</p>
+                <p>&copy; 2023 ZenzoTec. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
