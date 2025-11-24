@@ -9,7 +9,7 @@ if (isset($_SESSION['usuario_id'])) {
     try {
         $pdo = new PDO(
             "mysql:host=db;dbname=zenzotec_db;charset=utf8mb4",
-            "zenzotec_user",    
+            "zenzotec_user",
             "userpass123",
             [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
         );
@@ -85,20 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - ZenzoTec</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/login.css"> <!-- ✅ Nuevo archivo CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .login-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; background-color: #F1F5F9; padding: 20px; }
-        .login-box { background: white; padding: 40px; border-radius: 12px; box-shadow: var(--shadow); max-width: 450px; width: 100%; }
-        .login-box h2 { text-align: center; margin-bottom: 25px; color: var(--dark); }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
-        .form-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; }
-        .btn-login { width: 100%; padding: 12px; font-weight: 700; border: none; border-radius: 30px; background: var(--primary); color: white; cursor: pointer; }
-        .btn-login:hover { background: var(--primary-dark); transform: translateY(-2px); }
-        .error { color: var(--danger); background: #fee; padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
-        .login-footer { text-align: center; margin-top: 20px; color: var(--gray); }
-        .login-footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
-    </style>
 </head>
 <body>
     <header>

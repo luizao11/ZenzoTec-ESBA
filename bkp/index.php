@@ -1,34 +1,19 @@
 <?php
 session_start();
-
-// Verificar que haya sesión
 if (!isset($_SESSION['usuario_id'])) {
     header('Location: ../login.php');
     exit;
 }
 
-// 🔑 EMAIL DEL ADMINISTRADOR - CAMBIA ESTO POR TU EMAIL REAL
-$admin_email = 'nueva123@zenzo.com';
-
 // Conexión a la base de datos
 try {
     $pdo = new PDO("mysql:host=db;dbname=zenzotec_db;charset=utf8mb4", "zenzotec_user", "userpass123");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-    // Verificar si el usuario es el administrador autorizado
-    $stmt = $pdo->prepare("SELECT email FROM usuarios WHERE id = ? AND email = ?");
-    $stmt->execute([$_SESSION['usuario_id'], $admin_email]);
-    $usuario = $stmt->fetch();
-    
-    if (!$usuario) {
-        die("<h2 style='text-align:center; margin-top:50px; color:#EF4444;'>Acceso denegado. Solo el administrador puede acceder a esta sección.</h2>");
-    }
-    
 } catch (PDOException $e) {
     die("Error de conexión: " . $e->getMessage());
 }
 
-// Obtener resumen estadístico
+// Obtener resumen
 $pedidos_count = $pdo->query("SELECT COUNT(*) FROM pedidos")->fetchColumn();
 $usuarios_count = $pdo->query("SELECT COUNT(*) FROM usuarios")->fetchColumn();
 $productos_count = $pdo->query("SELECT COUNT(*) FROM productos")->fetchColumn();
@@ -36,13 +21,13 @@ $ventas_totales = $pdo->query("SELECT COALESCE(SUM(total), 0) FROM pedidos WHERE
 ?>
 
 <!DOCTYPE html>
+    
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración - ZenzoTec</title>
     <link rel="stylesheet" href="../css/styles.css">
-    <link rel="stylesheet" href="../css/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .admin-container { padding: 20px; }
@@ -200,7 +185,7 @@ $ventas_totales = $pdo->query("SELECT COALESCE(SUM(total), 0) FROM pedidos WHERE
                         <td><?= htmlspecialchars($row['usuario']) ?></td>
                         <td><?= date('d/m/Y H:i', strtotime($row['fecha_pedido'])) ?></td>
                         <td>$<?= number_format($row['total'], 2) ?></td>
-                        <td><?= ucfirst(htmlspecialchars($row['estado'])) ?></td>
+                        <td><?= ucfirst($row['estado']) ?></td>
                         <td>
                             <a href="pedidos.php?id=<?= $row['id'] ?>" class="btn-small btn-view">
                                 Ver
@@ -212,7 +197,7 @@ $ventas_totales = $pdo->query("SELECT COALESCE(SUM(total), 0) FROM pedidos WHERE
             </table>
         </div>
 
-        <!-- Gestión de Stock -->
+        <!-- Productos con stock bajo -->
         <div class="section">
             <h2><i class="fas fa-warehouse"></i> Gestión de Stock</h2>
             <table>
@@ -251,7 +236,7 @@ $ventas_totales = $pdo->query("SELECT COALESCE(SUM(total), 0) FROM pedidos WHERE
             </table>
         </div>
 
-        <!-- Usuarios Registrados -->
+        <!-- Usuarios -->
         <div class="section">
             <h2><i class="fas fa-users"></i> Usuarios Registrados</h2>
             <table>
