@@ -5,14 +5,12 @@ if (!isset($_SESSION['usuario_id'])) {
     exit;
 }
 
-// 🔑 EMAIL DEL ADMINISTRADOR - CAMBIA ESTO POR TU EMAIL REAL
-$admin_email = 'nueva123@zenzo.com';
-
+// Verificar si es administrador
+$admin_email = 'nueva123@zenzo.com'; // ← CAMBIA POR TU EMAIL DE ADMIN
 try {
     $pdo = new PDO("mysql:host=db;dbname=zenzotec_db;charset=utf8mb4", "zenzotec_user", "userpass123");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
-    // Verificar que es administrador
     $stmt = $pdo->prepare("SELECT email FROM usuarios WHERE id = ?");
     $stmt->execute([$_SESSION['usuario_id']]);
     $usuario = $stmt->fetch();
@@ -30,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['estado'])) {
     $estado = $_POST['estado'];
     
     // Validar estado
-    $estados_validos = ['pendiente', 'completado', 'cancelado'];
+    $estados_validos = ['pendiente', 'completado', 'cancelado', 'enviado'];
     if (!in_array($estado, $estados_validos)) {
         die('Estado no válido');
     }
@@ -38,6 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['estado'])) {
     try {
         $stmt = $pdo->prepare("UPDATE pedidos SET estado = ? WHERE id = ?");
         $stmt->execute([$estado, $id]);
+        
+        // Redirigir para evitar reenvío
         header("Location: pedidos.php?id=" . $id);
         exit;
     } catch (PDOException $e) {
@@ -86,9 +86,101 @@ try {
     <meta charset="UTF-8">
     <title>Pedido #<?= htmlspecialchars($pedido['numero_pedido']) ?> - Admin</title>
     <link rel="stylesheet" href="../css/styles.css">
-    <link rel="stylesheet" href="../css/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-   
+    <style>
+        .detalle-container { padding: 20px; max-width: 800px; margin: 0 auto; }
+        .detalle-card { background: white; border-radius: 12px; box-shadow: var(--shadow); padding: 25px; margin-bottom: 25px; }
+        .detalle-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .label { font-weight: 600; color: var(--dark); }
+        .value { color: var(--gray); }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #F8FAFC; }
+        
+        /* Estilos para los botones de estado */
+        .estado-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        .estado-title {
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        .estado-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .estado-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-completado {
+            background: var(--success);
+            color: white;
+        }
+        .btn-completado:hover {
+            background: #0da16d;
+            transform: translateY(-2px);
+        }
+        .btn-cancelado {
+            background: var(--danger);
+            color: white;
+        }
+        .btn-cancelado:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+        .btn-enviado {
+            background: var(--accent);
+            color: white;
+        }
+        .btn-enviado:hover {
+            background: #e08a0a;
+            transform: translateY(-2px);
+        }
+        .btn-pendiente {
+            background: var(--gray);
+            color: white;
+        }
+        .btn-pendiente:hover {
+            background: #7d8ca0;
+            transform: translateY(-2px);
+        }
+        
+        .btn-back {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        .btn-back:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Estado actual destacado */
+        .estado-actual {
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-align: center;
+            margin: 15px 0;
+        }
+        .estado-pendiente { background: #e2e8f0; color: #475569; }
+        .estado-completado { background: #d1fae5; color: #065f46; }
+        .estado-cancelado { background: #fee2e2; color: #b91c1c; }
+        .estado-enviado { background: #ffedd5; color: #c2410c; }
+    </style>
 </head>
 <body>
     <header>
@@ -146,6 +238,12 @@ try {
                         <button type="submit" name="estado" value="cancelado" class="estado-btn btn-cancelado"
                                 onclick="return confirm('¿Seguro que deseas cancelar este pedido?');">
                             <i class="fas fa-times"></i> Cancelar Pedido
+                        </button>
+                    <?php endif; ?>
+                    
+                    <?php if ($pedido['estado'] !== 'enviado'): ?>
+                        <button type="submit" name="estado" value="enviado" class="estado-btn btn-enviado">
+                            <i class="fas fa-truck"></i> Marcar como Enviado
                         </button>
                     <?php endif; ?>
                     

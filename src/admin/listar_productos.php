@@ -21,54 +21,9 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productos - ZenzoTec Admin</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/listar_productos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .admin-container { padding: 20px; }
-        .section {
-            background: white;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-        .section h2 {
-            margin-bottom: 20px;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #F8FAFC; font-weight: 600; }
-        .product-img {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-        .btn-small {
-            padding: 6px 12px;
-            font-size: 0.85rem;
-            border-radius: 20px;
-            text-decoration: none;
-            display: inline-block;
-            margin-right: 8px;
-        }
-        .btn-edit { background: var(--primary); color: white; }
-        .btn-edit:hover { background: var(--primary-dark); }
-        .btn-delete {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            cursor: pointer;
-        }
-        .btn-delete:hover { background: #dc2626; }
-        .stock-low { color: var(--danger); font-weight: bold; }
-    </style>
+
 </head>
 <body>
     <header>

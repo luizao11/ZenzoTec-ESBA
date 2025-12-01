@@ -1,0 +1,85 @@
+ <style>
+        .detalle-container { padding: 20px; max-width: 800px; margin: 0 auto; }
+        .detalle-card { background: white; border-radius: 12px; box-shadow: var(--shadow); padding: 25px; margin-bottom: 25px; }
+        .detalle-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .label { font-weight: 600; color: var(--dark); }
+        .value { color: var(--gray); }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #F8FAFC; }
+        
+        /* Estilos para los botones de estado */
+        .estado-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        .estado-title {
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        .estado-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .estado-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-completado {
+            background: var(--success);
+            color: white;
+        }
+        .btn-completado:hover {
+            background: #0da16d;
+            transform: translateY(-2px);
+        }
+        .btn-cancelado {
+            background: var(--danger);
+            color: white;
+        }
+        .btn-cancelado:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+        .btn-pendiente {
+            background: var(--gray);
+            color: white;
+        }
+        .btn-pendiente:hover {
+            background: #7d8ca0;
+            transform: translateY(-2px);
+        }
+        
+        /* Estado actual destacado */
+        .estado-actual {
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-align: center;
+            margin: 15px 0;
+        }
+        .estado-pendiente { background: #e2e8f0; color: #475569; }
+        .estado-completado { background: #d1fae5; color: #065f46; }
+        .estado-cancelado { background: #fee2e2; color: #b91c1c; }
+        
+        .btn-back {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        .btn-back:hover {
+            background: var(--primary-dark);
+        }
+    </style>

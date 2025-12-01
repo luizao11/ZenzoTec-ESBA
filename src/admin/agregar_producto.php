@@ -50,92 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Producto - ZenzoTec Admin</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/agregar_producto.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .admin-container {
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .form-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            padding: 30px;
-        }
-        .form-card h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: var(--dark);
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark);
-        }
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-family: inherit;
-        }
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        .btn-submit {
-            width: 100%;
-            padding: 14px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            border: none;
-            border-radius: 30px;
-            background: var(--primary);
-            color: white;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .btn-submit:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-        .message {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .message.success {
-            background: #D1FAE5;
-            color: #065F46;
-        }
-        .message.error {
-            background: #FEE2E2;
-            color: #B91C1C;
-        }
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
-        code {
-            background: #f1f5f9;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: monospace;
-        }
-    </style>
+
 </head>
 <body>
     <header>

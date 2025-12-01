@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
-
+//obtner producto 
 try {
     $pdo = new PDO("mysql:host=db;dbname=zenzotec_db;charset=utf8mb4", "zenzotec_user", "userpass123");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -17,7 +17,7 @@ try {
             'description' => htmlspecialchars($p['descripcion']),
             'price' => (float)$p['precio'],
             'stock' => (int)$p['stock'],
-            'image' => $p['imagen'] // solo el nombre, ej: "laptop.jpg"
+            'image' => $p['imagen'] 
         ];
     }
 
